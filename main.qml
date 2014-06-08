@@ -14,7 +14,14 @@ ApplicationWindow {
     menuBar: MenuBar {
         Menu {
             title: "File"
-            MenuItem { text: "Save..." }
+            MenuItem { 
+                text: "Save"
+                onTriggered: { 
+                    world.reset()
+                    world.running = false
+                    qmlWriter.save(game, "mygame/game.qml")
+                }
+            }
             MenuItem { 
                 text: "Quit" 
                 onTriggered: Qt.quit()
@@ -51,6 +58,7 @@ ApplicationWindow {
                             anchors.fill: parent
                             running: false
                             clip: true
+                            property var originalProperties: []
         
                             DebugDraw {
                                 id: debugDraw
@@ -58,6 +66,18 @@ ApplicationWindow {
                                 world: world
                                 opacity: 1
                                 visible: false
+                            }
+
+                            function reset() {
+                                for(var i = 0; i < world.originalProperties.length; i++) {
+                                    var item = world.originalProperties[i]["item"]
+                                    item.x = world.originalProperties[i]["x"]
+                                    item.y = world.originalProperties[i]["y"]
+                                    if(item.linearVelocity != undefined) {
+                                        item.linearVelocity = Qt.point(0, 0)
+                                        item.awake = true
+                                    }
+                                }
                             }
                         }
                     }
@@ -91,15 +111,21 @@ ApplicationWindow {
                             anchors.bottomMargin: 5
                             anchors.leftMargin: 5
                             anchors.rightMargin: 5
+                            cellWidth: 63
+                            cellHeight: 63
+                            interactive: false
                             clip: true
 
                             model: entityModel
                             delegate: PaletteItem {
+                                z: 10
+                                width: 58
+                                height: 58
                                 componentFile: model.display
                                 Component.onCompleted: { 
                                     var comp = Qt.createComponent(model.display)
                                     var obj = comp.createObject()
-                                    image = "entities/" + obj.image
+                                    image = "mygame/" + obj.image
                                 }
                             }
                         }
@@ -134,13 +160,18 @@ ApplicationWindow {
                 text: world.running ? "Pause" : "Play"
                 onClicked: world.running = !world.running
             }
+
+            Button {
+                text: "Reset"
+                onClicked: world.reset()
+            }
         }
 
         StatusBar {
             Label { 
                 text: world.running ? "Playing" : "Paused"
             }
-        }        
+        }
 
     }
 

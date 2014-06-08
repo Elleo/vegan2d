@@ -28,8 +28,7 @@ function loadComponent() {
 
 function createItem() {
     if (itemComponent.status == Component.Ready && draggedItem == null) {
-        draggedItem = itemComponent.createObject(world, {"image": paletteItem.image.replace("entities/", ""), "x": posnInWindow.x, "y": posnInWindow.y, "z": 3});
-        // make sure created item is above the ground layer
+        draggedItem = itemComponent.createObject(world, {"image": paletteItem.image.replace("mygame/", ""), "x": posnInWindow.x, "y": posnInWindow.y, "z": 3});
     } else if (itemComponent.status == Component.Error) {
         draggedItem = null;
         console.log("error creating component");
@@ -56,6 +55,7 @@ function endDrag(mouse)
         draggedItem = null;
     } else {
         draggedItem.created = true;
+        world.originalProperties.push({"item": draggedItem, "x": draggedItem.x, "y": draggedItem.y});
         draggedItem = null;
     }
 }

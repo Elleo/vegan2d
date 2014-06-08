@@ -7,4 +7,8 @@ QT += \
     gui
 
 SOURCES += \
-    main.cpp
+    main.cpp \
+    qmlwriter.cpp
+
+HEADERS += \
+    qmlwriter.h

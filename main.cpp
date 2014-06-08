@@ -3,6 +3,10 @@
 #include <QQuickView>
 #include <QString>
 #include <QStringListModel>
+#include <QQuickItem>
+#include <QDebug>
+
+#include "qmlwriter.h"
 
 int main(int argc, char **argv)
 {
@@ -11,20 +15,25 @@ int main(int argc, char **argv)
     QQmlApplicationEngine engine;
     QQmlContext *context = engine.rootContext();
     
-    QDir entityDir("entities/");
+    QDir entityDir("mygame/");
     QStringList filters;
     filters << "*.qml";
     QStringList entities;
     foreach(QString entity, entityDir.entryList(filters)) {
-        entities << ("entities/" + entity);
+        if(!entity.contains("game.qml")) {
+            entities << ("mygame/" + entity);
+        }
     }
 
     QStringListModel *entityModel = new QStringListModel(entities);
+    QmlWriter *qmlWriter = new QmlWriter();
 
+    context->setContextProperty("qmlWriter", qmlWriter);
     context->setContextProperty("entityModel", entityModel);
 
     engine.load(QUrl::fromLocalFile("main.qml"));
     QObject *topLevel = engine.rootObjects().value(0);
+
     QQuickWindow *window = qobject_cast<QQuickWindow *>(topLevel);
     window->show();
 
