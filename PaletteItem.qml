@@ -49,6 +49,8 @@ Image {
 
     source: image
 
+    fillMode: Image.PreserveAspectFit
+
     MouseArea {
         anchors.fill: parent
 
