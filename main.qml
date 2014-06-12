@@ -64,8 +64,9 @@ ApplicationWindow {
                                 id: debugDraw
                                 anchors.fill: parent
                                 world: world
-                                opacity: 1
+                                opacity: 0.6
                                 visible: false
+                                z: 1000
                             }
 
                             function reset() {
