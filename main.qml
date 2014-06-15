@@ -29,6 +29,15 @@ ApplicationWindow {
         }
     }
 
+    Component {
+        id: selectionComponent
+        MouseArea {
+            anchors.fill: parent
+            enabled: !world.running
+            onClicked: propertyEditor.selectedItem = parent
+        }
+    }
+
     Column {
         id: mainCol
         anchors.leftMargin: 5
@@ -99,6 +108,7 @@ ApplicationWindow {
                         anchors.top: parent.top
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
+
                     Rectangle {
                         color: "#FFFFFF"
                         border.color: "#000000"
@@ -134,12 +144,102 @@ ApplicationWindow {
                 }
 
                 Item {
+                    id: propertyEditor
                     width: parent.width
+                    property var selectedItem
+                    visible: selectedItem != undefined
                     Label {
+                        id: propLabel
                         text: "Properties"
                         anchors.top: parent.top
                         anchors.topMargin: 2
                         anchors.horizontalCenter: parent.horizontalCenter
+                    }
+
+                    onSelectedItemChanged: {
+                        bodyTypeCombo.currentIndex = selectedItem.bodyType == Body.Static ? 0 : 1
+                    }
+
+                    Grid {
+                        anchors.top: propLabel.bottom
+                        anchors.topMargin: 10
+                        anchors.right: parent.right
+                        width: parent.width - 10
+                        columns: 2
+                        spacing: 10
+                       
+                        Label { text: "Body Type:" } 
+                        ComboBox {
+                            id: bodyTypeCombo
+                            width: parent.width / 1.8
+                            model: ListModel {
+                                id: bodyTypeModel
+                                ListElement { text: "Static"; bodyType: Body.Static }
+                                ListElement { text: "Dynamic"; bodyType: Body.Dynamic }
+                            }
+                            onCurrentIndexChanged: propertyEditor.selectedItem.bodyType = bodyTypeModel.get(currentIndex).bodyType
+                        }
+
+                        Label { text: "X:" } 
+                        SpinBox {
+                            value: propertyEditor.selectedItem.x
+                            onValueChanged: propertyEditor.selectedItem.x = value
+                            maximumValue: game.width
+                            minimumValue: 0
+                        }
+
+                        Label { text: "Y:" }
+                        SpinBox {
+                            value: propertyEditor.selectedItem.y
+                            onValueChanged: propertyEditor.selectedItem.y = value
+                            maximumValue: game.height
+                            minimumValue: 0
+                        }
+
+                        Label { text: "Z:" }
+                        SpinBox {
+                            value: propertyEditor.selectedItem.z
+                            onValueChanged: propertyEditor.selectedItem.z = value
+                            maximumValue: 1000
+                            minimumValue: 0
+                        }
+
+                        Label { 
+                            text: "Restitution:"
+                        }
+                        SpinBox {
+                            value: propertyEditor.selectedItem.restitution
+                            onValueChanged: propertyEditor.selectedItem.restitution = value
+                            maximumValue: 10
+                            minimumValue: 0
+                            stepSize: 0.1
+                            decimals: 2
+                        }
+
+                        Label {
+                            text: "Friction:"
+                        }
+                        SpinBox {
+                            value: propertyEditor.selectedItem.friction
+                            onValueChanged: propertyEditor.selectedItem.friction = value
+                            maximumValue: 10
+                            minimumValue: 0
+                            stepSize: 0.1
+                            decimals: 2
+                        }
+
+                        Label {
+                            text: "Density:"
+                        }
+                        SpinBox {
+                            value: propertyEditor.selectedItem.density
+                            onValueChanged: propertyEditor.selectedItem.density = value
+                            maximumValue: 10
+                            minimumValue: 1
+                            stepSize: 0.1
+                            decimals: 2
+                        }
+
                     }
                 }
             }
