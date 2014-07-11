@@ -17,8 +17,8 @@ ApplicationWindow {
             MenuItem { 
                 text: "Save"
                 onTriggered: { 
-                    world.reset()
-                    world.running = false
+                    scene.reset()
+                    scene.running = false
                     qmlWriter.save(game, "mygame/game.qml")
                 }
             }
@@ -33,7 +33,7 @@ ApplicationWindow {
         id: selectionComponent
         MouseArea {
             anchors.fill: parent
-            enabled: !world.running
+            enabled: !scene.running
             onClicked: propertyEditor.selectedItem = parent
         }
     }
@@ -61,32 +61,20 @@ ApplicationWindow {
                     Scene {
                         id: scene
                         anchors.fill: parent
+                        running: false
+                        property var originalProperties: []
+                        clip: true
+                        physics: true
+                        Component.onCompleted: {scene.running = false}
         
-                        World {
-                            id: world
-                            anchors.fill: parent
-                            running: false
-                            clip: true
-                            property var originalProperties: []
-        
-                            DebugDraw {
-                                id: debugDraw
-                                anchors.fill: parent
-                                world: world
-                                opacity: 0.6
-                                visible: false
-                                z: 1000
-                            }
-
-                            function reset() {
-                                for(var i = 0; i < world.originalProperties.length; i++) {
-                                    var item = world.originalProperties[i]["item"]
-                                    item.x = world.originalProperties[i]["x"]
-                                    item.y = world.originalProperties[i]["y"]
-                                    if(item.linearVelocity != undefined) {
-                                        item.linearVelocity = Qt.point(0, 0)
-                                        item.awake = true
-                                    }
+                        function reset() {
+                            for(var i = 0; i < scene.originalProperties.length; i++) {
+                                var item = scene.originalProperties[i]["item"]
+                                item.x = scene.originalProperties[i]["x"]
+                                item.y = scene.originalProperties[i]["y"]
+                                if(item.linearVelocity != undefined) {
+                                    item.linearVelocity = Qt.point(0, 0)
+                                    item.awake = true
                                 }
                             }
                         }
@@ -139,6 +127,17 @@ ApplicationWindow {
                                     image = "mygame/" + obj.image
                                 }
                             }
+
+                            Button {
+                                width: 26
+                                height: 26
+                                anchors.bottom: parent.bottom
+                                anchors.right: parent.right
+                                iconSource: "add.png"
+                                tooltip: "Create New Entity"
+                                onClicked: entityEditor.show()
+                            }
+
                         }
                     }
                 }
@@ -148,6 +147,7 @@ ApplicationWindow {
                     width: parent.width
                     property var selectedItem
                     visible: selectedItem != undefined
+
                     Label {
                         id: propLabel
                         text: "Properties"
@@ -157,7 +157,7 @@ ApplicationWindow {
                     }
 
                     onSelectedItemChanged: {
-                        bodyTypeCombo.currentIndex = selectedItem.bodyType == Body.Static ? 0 : 1
+                        bodyTypeCombo.currentIndex = selectedItem.bodyType == Entity.Static ? 0 : 1
                     }
 
                     Grid {
@@ -174,8 +174,8 @@ ApplicationWindow {
                             width: parent.width / 1.8
                             model: ListModel {
                                 id: bodyTypeModel
-                                ListElement { text: "Static"; bodyType: Body.Static }
-                                ListElement { text: "Dynamic"; bodyType: Body.Dynamic }
+                                ListElement { text: "Static"; bodyType: Entity.Static }
+                                ListElement { text: "Dynamic"; bodyType: Entity.Dynamic }
                             }
                             onCurrentIndexChanged: propertyEditor.selectedItem.bodyType = bodyTypeModel.get(currentIndex).bodyType
                         }
@@ -251,27 +251,31 @@ ApplicationWindow {
             spacing: 10
             
             Button {
-                text: "Debug view: " + (debugDraw.visible ? "on" : "off")
+                text: "Debug view: " + (scene.debug ? "on" : "off")
                 onClicked: {
-                    debugDraw.visible = !debugDraw.visible;
+                    scene.debug = !scene.debug;
                 }
             }
 
             Button {
-                text: world.running ? "Pause" : "Play"
-                onClicked: world.running = !world.running
+                text: scene.running ? "Pause" : "Play"
+                onClicked: scene.running = !scene.running
             }
 
             Button {
                 text: "Reset"
-                onClicked: world.reset()
+                onClicked: scene.reset()
             }
         }
 
         StatusBar {
             Label { 
-                text: world.running ? "Playing" : "Paused"
+                text: scene.running ? "Playing" : "Paused"
             }
+        }
+
+        EntityEditor {
+            id: entityEditor
         }
 
     }

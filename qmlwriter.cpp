@@ -46,9 +46,6 @@ QString QmlWriter::dumpRecursive(QObject *item, QString tab)
     if(className == "Scene") {
         qml += tab + "id: scene\n";
     }
-    if(className == "World") {
-        qml += tab + "id: world\n";
-    }
     for(int i = 0; i < item->metaObject()->propertyCount(); i++) {
         QMetaProperty prop = item->metaObject()->property(i);
         // TODO: Figure out how to automatically tell which properties can be included
