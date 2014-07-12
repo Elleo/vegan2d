@@ -155,7 +155,7 @@ ApplicationWindow {
                                 height: 26
                                 anchors.bottom: parent.bottom
                                 anchors.right: parent.right
-                                iconSource: "add.png"
+                                iconSource: "images/add.png"
                                 tooltip: "Create New Entity"
                                 onClicked: entityEditor.show()
                             }
