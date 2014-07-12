@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     context->setContextProperty("qmlWriter", qmlWriter);
     context->setContextProperty("entityModel", entityModel);
 
-    engine.load(QUrl::fromLocalFile("main.qml"));
+    engine.load(QUrl::fromLocalFile("Editor.qml"));
     QObject *topLevel = engine.rootObjects().value(0);
 
     QQuickWindow *window = qobject_cast<QQuickWindow *>(topLevel);
