@@ -3,12 +3,15 @@ import Bacon2D 1.0
 import QtQuick.Controls 1.1
 
 ApplicationWindow {
+    id: win
     height: mainCol.height
     width: mainCol.width
     maximumHeight: mainCol.height
     minimumHeight: mainCol.height
     maximumWidth: mainCol.width
     minimumWidth: mainCol.width
+    property bool snapToGrid: false
+    property int gridSize: 32
     title: "Bacon2D Editor"
 
     menuBar: MenuBar {
@@ -25,6 +28,25 @@ ApplicationWindow {
             MenuItem { 
                 text: "Quit" 
                 onTriggered: Qt.quit()
+            }
+        }
+
+        Menu {
+            title: "Placement"
+            MenuItem {
+                text: "Snap to grid"
+                checkable: true
+                checked: win.snapToGrid
+                onToggled: {
+                    win.snapToGrid = checked
+                }
+            }
+            Menu {
+                title: "Grid Size"
+                MenuItem { text: "8x8"; checkable: true; checked: win.gridSize == 8; onToggled: checked ? win.gridSize = 8 : '' }
+                MenuItem { text: "16x16"; checkable: true; checked: win.gridSize == 16; onToggled: checked ? win.gridSize = 16 : '' }
+                MenuItem { text: "32x32"; checkable: true; checked: win.gridSize == 32; onToggled: checked ? win.gridSize = 32 : '' }
+                MenuItem { text: "64x64"; checkable: true; checked: win.gridSize == 64; onToggled: checked ? win.gridSize = 64 : '' }
             }
         }
     }

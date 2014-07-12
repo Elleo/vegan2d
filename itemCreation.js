@@ -44,6 +44,10 @@ function continueDrag(mouse)
 
     draggedItem.x = mouse.x + posnInWindow.x - startingMouse.x;
     draggedItem.y = mouse.y + posnInWindow.y - startingMouse.y;
+    if(win.snapToGrid) {
+        draggedItem.x = Math.round(draggedItem.x / win.gridSize) * win.gridSize;
+        draggedItem.y = Math.round(draggedItem.y / win.gridSize) * win.gridSize;
+    }
 }
 
 function endDrag(mouse)
