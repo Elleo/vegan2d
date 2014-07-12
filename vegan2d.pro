@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = editor
+TARGET = vegan2d
 
 QT += \
     qml \

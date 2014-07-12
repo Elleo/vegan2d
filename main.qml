@@ -12,7 +12,7 @@ ApplicationWindow {
     minimumWidth: mainCol.width
     property bool snapToGrid: false
     property int gridSize: 32
-    title: "Bacon2D Editor"
+    title: "Vegan2D"
 
     menuBar: MenuBar {
         Menu {
