@@ -87,7 +87,7 @@ ApplicationWindow {
                         property var originalProperties: []
                         clip: true
                         physics: true
-                        Component.onCompleted: {scene.running = false}
+                        Component.onCompleted: {scene.running = false;}
         
                         function reset() {
                             for(var i = 0; i < scene.originalProperties.length; i++) {
@@ -106,7 +106,7 @@ ApplicationWindow {
 
             SplitView {
                 orientation: Qt.Vertical
-                width: 200
+                width: 230
                 height: game.height
 
                 Item {
@@ -208,6 +208,7 @@ ApplicationWindow {
                             onValueChanged: propertyEditor.selectedItem.x = value
                             maximumValue: game.width
                             minimumValue: 0
+                            width: 80
                         }
 
                         Label { text: "Y:" }
@@ -216,6 +217,7 @@ ApplicationWindow {
                             onValueChanged: propertyEditor.selectedItem.y = value
                             maximumValue: game.height
                             minimumValue: 0
+                            width: 80
                         }
 
                         Label { text: "Z:" }
@@ -224,6 +226,7 @@ ApplicationWindow {
                             onValueChanged: propertyEditor.selectedItem.z = value
                             maximumValue: 1000
                             minimumValue: 0
+                            width: 80
                         }
 
                         Label { 
@@ -236,6 +239,7 @@ ApplicationWindow {
                             minimumValue: 0
                             stepSize: 0.1
                             decimals: 2
+                            width: 80
                         }
 
                         Label {
@@ -248,6 +252,7 @@ ApplicationWindow {
                             minimumValue: 0
                             stepSize: 0.1
                             decimals: 2
+                            width: 80
                         }
 
                         Label {
@@ -260,6 +265,7 @@ ApplicationWindow {
                             minimumValue: 1
                             stepSize: 0.1
                             decimals: 2
+                            width: 80
                         }
 
                     }

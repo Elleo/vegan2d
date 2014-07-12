@@ -1,4 +1,4 @@
-#include <QGuiApplication>
+#include <QApplication>
 #include <QtQml>
 #include <QQuickView>
 #include <QString>
@@ -10,7 +10,7 @@
 
 int main(int argc, char **argv)
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
     QQmlContext *context = engine.rootContext();

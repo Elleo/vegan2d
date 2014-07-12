@@ -4,7 +4,8 @@ TARGET = editor
 QT += \
     qml \
     quick \
-    gui
+    gui \
+    widgets
 
 SOURCES += \
     main.cpp \
