@@ -5,15 +5,21 @@
 #include <QRegExp>
 #include <QFile>
 #include <QTextStream>
+#include <QStringListModel>
+#include <QDir>
 
-#include "qmlwriter.h"
+#include "gamemanager.h"
 
-void QmlWriter::save(QQuickItem *game, QString filename)
+
+GameManager::GameManager(QQmlContext *context) {
+    m_context = context;
+}
+
+void GameManager::save(QQuickItem *game)
 {
-    qDebug() << "Saving " << game << " to " << filename;
+    QString filename = m_name + QDir::separator() + m_name + ".qml";
     QString qmlOutput = "import QtQuick 2.2\nimport Bacon2D 1.0\n\n";
     qmlOutput += dumpRecursive(game, "");
-    qDebug() << qmlOutput;
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         return;
@@ -22,9 +28,9 @@ void QmlWriter::save(QQuickItem *game, QString filename)
     out << qmlOutput;
 }
 
-QString QmlWriter::dumpRecursive(QObject *item, QString tab)
+
+QString GameManager::dumpRecursive(QObject *item, QString tab)
 {
-    qDebug() << "Dumping " << item;
     QString className = item->metaObject()->className();
     if(className == "StepDriver" || className == "Box2DProfile") {
         return "";
@@ -88,3 +94,38 @@ QString QmlWriter::dumpRecursive(QObject *item, QString tab)
     qml += tab + " }\n";
     return qml;
 }
+
+
+void GameManager::create(QString name) {
+    QDir dir; // For some reason mkdir isn't static...
+    m_name = name;
+    // TODO: Error handling, report conflicting names, etc.
+    if(!dir.mkdir(m_name)) {
+        int append = 1;
+        while(!dir.mkdir(m_name + "." + QString::number(append))) {
+            append++;
+        }
+        m_name += "." + QString::number(append);
+    }
+    dir.mkdir(m_name + QDir::separator() + "images");
+    open(m_name);
+}
+
+
+void GameManager::open(QString name) {
+    m_name = name;
+    QDir entityDir(name);
+    QStringList filters;
+    filters << "*.qml";
+    QStringList entities;
+    foreach(QString entity, entityDir.entryList(filters)) {
+        if(!entity.contains(m_name + ".qml")) {
+            entities << (name + "/" + entity);
+        }
+    }
+
+    QStringListModel *entityModel = new QStringListModel(entities);
+    m_context->setContextProperty("entityModel", entityModel);
+    nameChanged();
+}
+

@@ -22,7 +22,7 @@ ApplicationWindow {
                 onTriggered: { 
                     scene.reset()
                     scene.running = false
-                    qmlWriter.save(game, "mygame/game.qml")
+                    gameManager.save(game)
                 }
             }
             MenuItem { 
@@ -146,7 +146,7 @@ ApplicationWindow {
                                 Component.onCompleted: { 
                                     var comp = Qt.createComponent(model.display)
                                     var obj = comp.createObject()
-                                    image = "mygame/" + obj.image
+                                    image = gameManager.name + "/" + obj.image
                                 }
                             }
 

@@ -9,7 +9,7 @@ QT += \
 
 SOURCES += \
     main.cpp \
-    qmlwriter.cpp
+    gamemanager.cpp
 
 HEADERS += \
-    qmlwriter.h
+    gamemanager.h
