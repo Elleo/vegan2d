@@ -49,6 +49,14 @@ ApplicationWindow {
                 MenuItem { text: "64x64"; checkable: true; checked: win.gridSize == 64; onToggled: checked ? win.gridSize = 64 : '' }
             }
         }
+
+        Menu {
+            title: "Help"
+            MenuItem {
+                text: "About"
+                onTriggered: about.show()
+            }
+        }
     }
 
     Component {
@@ -304,6 +312,12 @@ ApplicationWindow {
 
         EntityEditor {
             id: entityEditor
+            visible: false
+        }
+
+        About {
+            id: about
+            visible: false
         }
 
     }
